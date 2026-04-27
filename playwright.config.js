@@ -1,6 +1,7 @@
 // @ts-check
 import { defineConfig } from "@playwright/test";
 import dotenv from "dotenv";
+import { config } from "process";
 
 dotenv.config();
 
