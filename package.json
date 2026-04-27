@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://redefine-commerce@dev.azure.com/redefine-commerce/imtra/_git/Automation_Imtra_Front"
+    "url": "https://github.com/tejasredefine/Imtra_Front_Dev.git"
   },
   "keywords": [
     "playwright",
