@@ -6,7 +6,7 @@ dotenv.config();
 
 export default defineConfig({
   testDir: "./src/tests",
-  fullyParallel: true,
+  fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: Number(process.env.RETRY_ATTEMPTS) ?? 1,
   workers: Number(process.env.WORKERS) ?? 1,
@@ -33,5 +33,12 @@ export default defineConfig({
       name: "chromium",
       use: { viewport: null, launchOptions: { args: ["--start-maximized"] } },
     },
+  ],
+
+  testMatch: [
+    "src/tests/login.spec.js",
+    "src/tests/checkout.spec.js",
+    "src/tests/navbar.spec.js",
+    // Add other .spec.js files in the desired order
   ],
 });
