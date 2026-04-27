@@ -1,0 +1,35 @@
+{
+  "name": "automation_imtra_front",
+  "version": "1.0.0",
+  "description": "Playwright test automation for Imtra Front",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "npx playwright test",
+    "test:headed": "npx playwright test --headed",
+    "test:debug": "npx playwright test --debug",
+    "test:grep": "npx playwright test --grep",
+    "test:parallel": "npx playwright test --workers=4",
+    "report": "npx playwright show-report reports/html",
+    "clean": "rm -rf reports/json/test-results reports/html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://redefine-commerce@dev.azure.com/redefine-commerce/imtra/_git/Automation_Imtra_Front"
+  },
+  "keywords": [
+    "playwright",
+    "automation",
+    "testing",
+    "QA"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.58.2",
+    "@types/node": "^25.5.0"
+  },
+  "dependencies": {
+    "dotenv": "^17.3.1"
+  }
+}
