@@ -546,25 +546,24 @@ export class ActionMethods {
       `✓ Pop-up modal validated successfully - Type: ${type}, Message: ${message}`,
     );
   }
-<<<<<<< HEAD
-    // ************** verify bredcrum methods ************************
- 
-    async verifyBreadcrumb(text) {
-      const breadcrumbSpan = this.page.locator(
-        `div[itemtype="https://schema.org/BreadcrumbList"] span[itemprop="name"]`,
-      ).filter({ hasText: new RegExp(`^${text.trim()}$`) });
-      await this.waitForVisible(breadcrumbSpan);
-      const count = await breadcrumbSpan.count();
-      if (count === 0) {
-        throw new Error(`❌ Breadcrumb with text "${text}" not found`);
-      }
-    }
 
-    // for click search bar button
-    async clickSearchBarButton(locator) {
-      await locator.click();
+  // ************** verify bredcrum methods ************************
+
+  async verifyBreadcrumb(text) {
+    const breadcrumbSpan = this.page
+      .locator(
+        `div[itemtype="https://schema.org/BreadcrumbList"] span[itemprop="name"]`,
+      )
+      .filter({ hasText: new RegExp(`^${text.trim()}$`) });
+    await this.waitForVisible(breadcrumbSpan);
+    const count = await breadcrumbSpan.count();
+    if (count === 0) {
+      throw new Error(`❌ Breadcrumb with text "${text}" not found`);
     }
+  }
+
+  // for click search bar button
+  async clickSearchBarButton(locator) {
+    await locator.click();
+  }
 }
-=======
-}
->>>>>>> d37e3aa4cf67619fde335d0c2735b4ce586f3a23
