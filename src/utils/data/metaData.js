@@ -1,5 +1,5 @@
 export const PAGE_TITLES = {
-  HOME: "IMTRA - Innovative Solutions for Recreational Marine",
+  HOME: "Imtra | Boating, Transportation, Energy & Marine Products",
   SIGN_IN: "Sign In - IMTRA",
   FORGOT_PASSWORD: "Forgot Password - Reset Your Account | IMTRA",
 };
