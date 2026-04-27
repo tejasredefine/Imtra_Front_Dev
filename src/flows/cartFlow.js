@@ -135,7 +135,7 @@ export class CartFlow extends BasePage {
       "This is Edied tesing Note",
       "This is a testing Note",
     );
-    await this.cartPage.tryToDeleteNote("This is Edied tesing Note");
+    await this.cartPage.tryToDeleteNote("This is Edited tesing Note");
   }
 
   async SaveForLaterWithoutLogin() {
@@ -195,22 +195,44 @@ export class CartFlow extends BasePage {
 
   async ProductQuantityVariationTesting() {
     await this.NavigateToCartPageFromProductDeatailsPage();
-    const { calculatedSubtotal, calculatedTariff, calculatedTotal } = await this.cartPage.GetUnitPriceAndTarrifIncreaseQuantityAndCalculateTotals();
-    await this.cartPage.VarifyCardSubtotals(calculatedSubtotal, calculatedTariff);
-    await this.cartPage.VarifyOrderSummary(calculatedSubtotal, calculatedTariff, calculatedTotal)
+    const { calculatedSubtotal, calculatedTariff, calculatedTotal } =
+      await this.cartPage.GetUnitPriceAndTarrifIncreaseQuantityAndCalculateTotals();
+    await this.cartPage.VarifyCardSubtotals(
+      calculatedSubtotal,
+      calculatedTariff,
+    );
+    await this.cartPage.VarifyOrderSummary(
+      calculatedSubtotal,
+      calculatedTariff,
+      calculatedTotal,
+    );
   }
 
   async ValidPromoCodeTesting() {
     await this.NavigateToCartPageFromProductDeatailsPage();
-    const { OrderSubtotal, OrderTariff } = await this.cartPage.GetOrderSummaryBeforeAppliyingPromoCode();
-    const discountAmount = await this.cartPage.EnterPromoCodeAndReturnDiscount("DVTEST01", "10", OrderSubtotal)
-    await this.cartPage.ValidateOrderSummary(discountAmount, OrderSubtotal, OrderTariff);
+    const { OrderSubtotal, OrderTariff } =
+      await this.cartPage.GetOrderSummaryBeforeAppliyingPromoCode();
+    const discountAmount = await this.cartPage.EnterPromoCodeAndReturnDiscount(
+      "DVTEST01",
+      "10",
+      OrderSubtotal,
+    );
+    await this.cartPage.ValidateOrderSummary(
+      discountAmount,
+      OrderSubtotal,
+      OrderTariff,
+    );
   }
 
   async ValidPromoCodeRemovalTesting() {
     await this.NavigateToCartPageFromProductDeatailsPage();
-    const { OrderSubtotal, OrderTotal } = await this.cartPage.GetOrderSummaryBeforeAppliyingPromoCode();
-    const discountAmount = await this.cartPage.EnterPromoCodeAndReturnDiscount("DVTEST01", "10", OrderSubtotal)
+    const { OrderSubtotal, OrderTotal } =
+      await this.cartPage.GetOrderSummaryBeforeAppliyingPromoCode();
+    const discountAmount = await this.cartPage.EnterPromoCodeAndReturnDiscount(
+      "DVTEST01",
+      "10",
+      OrderSubtotal,
+    );
     await this.cartPage.RemovePromoCode(OrderTotal);
   }
 
