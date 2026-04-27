@@ -132,7 +132,7 @@ export class CartFlow extends BasePage {
 
     await this.cartPage.addANote("This is a testing Note");
     await this.cartPage.editNote(
-      "This is Edied tesing Note",
+      "This is Edited tesing Note",
       "This is a testing Note",
     );
     await this.cartPage.tryToDeleteNote("This is Edited tesing Note");
