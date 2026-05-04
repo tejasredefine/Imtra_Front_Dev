@@ -21,15 +21,18 @@ export class CartFlow extends BasePage {
   }
 
   // ******************* Small Flow Utilities ***************************
+
   async NavigateToProductListingPageRandomly() {
     await this.homepage.hoverOvernavlinkrandomly();
     await this.homepage.clickOnTheOneSublinkInSubNavDropdown();
     await this.homepage.verifyPageRedirectionToProductListingPage();
   }
+
   // ********************************************************************
 
-  // ======== Cart Navigation Method =================
-  async NavigateToCartPageFromProductDeatailsPage() {
+  // ======== Cart Navigation Methods =================
+
+  async NavigateToCartPageFromProductDetailsPage() {
     await this.homepage.hoverOvernavlinkrandomly();
     await this.homepage.clickOnTheOneSublinkInSubNavDropdown();
     await this.homepage.verifyPageRedirectionToProductListingPage();
@@ -39,122 +42,90 @@ export class CartFlow extends BasePage {
     await this.verifyPageTitle("Cart - IMTRA");
   }
 
+  // FIX: renamed from NavigateToCartPageFromProductDeatailsPage (typo) to correct spelling
+  // Alias kept for backward compatibility
+  async NavigateToCartPageFromProductDeatailsPage() {
+    return this.NavigateToCartPageFromProductDetailsPage();
+  }
+
   async NavigateToCartPageFromNavCartIcon(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await addSleep(1);
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(1);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.ClickOnButtonByTagAndText("a", "Go To Cart");
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.verifyPageTitle("Cart - IMTRA");
   }
 
-  // ========== Cart Sidebar Method ==================
-  // ------------ Empty Cart Tesing ------------------
+  // ========== Cart Sidebar Methods ==================
+
   async EmptyCartTesting() {
     await this.ClickOnButtonByTagAndText("a", "Thrusters");
     await this.cartPage.clickOnCartIconinNavbar();
     await this.cartPage.EmptyCartSidebarTesting(PAGE_TITLES.HOME);
   }
 
-  // --- Cart Item Additon And verificaion Testing --
-  async CartSidebarDetailsVerificationesting() {
+  async CartSidebarDetailsVerificationTesting() {
     await this.NavigateToProductListingPageRandomly();
     await this.cartPage.clickOnAddToCartAndVerifyTheCartDetails();
   }
 
-  // ---- Cart Sidebar Values Calculation Testing ---
-  async CartSidebarTotalVerificaions(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await addSleep(1);
+  async CartSidebarTotalVerifications(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(1);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.cartPage.verifyCartSidebarCalculations();
   }
 
-  // ---- Cart Sidebar Item Removal Testing ---
-  async CartSidebarTotalVerificaions(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await addSleep(1);
+  // FIX: original had two methods with the same name CartSidebarTotalVerificaions —
+  // second one silently overwrote the first. Renamed to CartSidebarItemRemoval.
+  async CartSidebarItemRemoval(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(1);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.cartPage.cartSidebarItemRemove();
   }
 
-  async NavigateToCartPageAndVerifyAllDeails(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await addSleep(1);
+  async NavigateToCartPageAndVerifyAllDetails(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(1);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.cartPage.NavigateToCartPageAndVerifyDetailsOfSidebarAndCartPage();
   }
 
   async NavigateToCheckoutPage(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await addSleep(1);
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(1);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.verifyPageTitle("IMTRA - Checkout");
   }
 
-  async NoteFuntionalityTesting(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-
-    await addSleep(2);
-
+  async NoteFunctionalityTesting(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(2);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.actions.addSleep(2);
     await this.ClickOnButtonByTagAndText("a", "Go To Cart");
     await this.actions.addSleep(2);
     await this.verifyPageTitle("Cart - IMTRA");
     await this.actions.addSleep(3);
-
     await this.cartPage.addANote("This is a testing Note");
-    await this.cartPage.editNote(
-      "This is Edited tesing Note",
-      "This is a testing Note",
-    );
-    await this.cartPage.tryToDeleteNote("This is Edited tesing Note");
+    await this.cartPage.editNote("This is Edited testing Note", "This is a testing Note");
+    await this.cartPage.tryToDeleteNote("This is Edited testing Note");
   }
 
   async SaveForLaterWithoutLogin() {
-    await this.NavigateToCartPageFromProductDeatailsPage();
-    const saveForLater = await findElementByXpath(
-      "//span[text()='Save for later']",
-    );
+    await this.NavigateToCartPageFromProductDetailsPage();
+    const saveForLater = await findElementByXpath("//span[text()='Save for later']");
     await click(saveForLater);
     await this.validateModal("Info", "Please login to add to wishlist");
   }
 
   async SaveForLaterWithLogin(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-
-    await addSleep(2);
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(2);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.actions.addSleep(2);
     await this.ClickOnButtonByTagAndText("a", "Go To Cart");
@@ -164,13 +135,9 @@ export class CartFlow extends BasePage {
     await this.cartPage.clickOnSaveForLaterButtonAndVerifyitIntheWhislistPage();
   }
 
-  async ContinueShoppingButtonTesing(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await addSleep(2);
+  async ContinueShoppingButtonTesting(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(2);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.actions.addSleep(2);
     await this.ClickOnButtonByTagAndText("a", "Go To Cart");
@@ -182,72 +149,57 @@ export class CartFlow extends BasePage {
     await this.verifyPageTitle(PAGE_TITLES.HOME);
   }
 
-  async ClearAllButtonTesing() {
-    await this.NavigateToCartPageFromProductDeatailsPage();
+  async ClearAllButtonTesting() {
+    await this.NavigateToCartPageFromProductDetailsPage();
     await this.cartPage.VerifyClearAllButtonFuntionality();
     await this.verifyPageTitle(PAGE_TITLES.HOME);
   }
 
   async SingleItemRemovalTest() {
-    await this.NavigateToCartPageFromProductDeatailsPage();
+    await this.NavigateToCartPageFromProductDetailsPage();
     await this.cartPage.DeleteSingleItem();
   }
 
   async ProductQuantityVariationTesting() {
-    await this.NavigateToCartPageFromProductDeatailsPage();
+    await this.NavigateToCartPageFromProductDetailsPage();
     const { calculatedSubtotal, calculatedTariff, calculatedTotal } =
       await this.cartPage.GetUnitPriceAndTarrifIncreaseQuantityAndCalculateTotals();
-    await this.cartPage.VarifyCardSubtotals(
-      calculatedSubtotal,
-      calculatedTariff,
-    );
-    await this.cartPage.VarifyOrderSummary(
-      calculatedSubtotal,
-      calculatedTariff,
-      calculatedTotal,
-    );
+    await this.cartPage.VarifyCardSubtotals(calculatedSubtotal, calculatedTariff);
+    await this.cartPage.VarifyOrderSummary(calculatedSubtotal, calculatedTariff, calculatedTotal);
   }
 
   async ValidPromoCodeTesting() {
-    await this.NavigateToCartPageFromProductDeatailsPage();
+    await this.NavigateToCartPageFromProductDetailsPage();
     const { OrderSubtotal, OrderTariff } =
       await this.cartPage.GetOrderSummaryBeforeAppliyingPromoCode();
     const discountAmount = await this.cartPage.EnterPromoCodeAndReturnDiscount(
       "DVTEST01",
       "10",
-      OrderSubtotal,
+      OrderSubtotal
     );
-    await this.cartPage.ValidateOrderSummary(
-      discountAmount,
-      OrderSubtotal,
-      OrderTariff,
-    );
+    await this.cartPage.ValidateOrderSummary(discountAmount, OrderSubtotal, OrderTariff);
   }
 
   async ValidPromoCodeRemovalTesting() {
-    await this.NavigateToCartPageFromProductDeatailsPage();
+    await this.NavigateToCartPageFromProductDetailsPage();
     const { OrderSubtotal, OrderTotal } =
       await this.cartPage.GetOrderSummaryBeforeAppliyingPromoCode();
     const discountAmount = await this.cartPage.EnterPromoCodeAndReturnDiscount(
       "DVTEST01",
       "10",
-      OrderSubtotal,
+      OrderSubtotal
     );
     await this.cartPage.RemovePromoCode(OrderTotal);
   }
 
   async InvalidPromoCodeTesting() {
-    await this.NavigateToCartPageFromProductDeatailsPage();
+    await this.NavigateToCartPageFromProductDetailsPage();
     await this.cartPage.AddInvalidPromocodeTest();
   }
 
   async CheckoutNowButtonTest(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await addSleep(2);
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(2);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.actions.addSleep(2);
     await this.ClickOnButtonByTagAndText("a", "Go To Cart");
@@ -258,12 +210,8 @@ export class CartFlow extends BasePage {
   }
 
   async RequestBulkConsultationButtonTest(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await addSleep(2);
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(2);
     await this.cartPage.clickOnCartIconinNavbar();
     await this.actions.addSleep(2);
     await this.ClickOnButtonByTagAndText("a", "Go To Cart");

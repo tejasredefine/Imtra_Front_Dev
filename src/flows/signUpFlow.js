@@ -113,7 +113,7 @@ export class SignUpFlow extends BasePage {
   }
 
   // ============================================================================
-  // Checkbox Test
+  // Checkbox Tests
   // ============================================================================
 
   async VerifyAllCheckboxes() {

@@ -1,7 +1,11 @@
 import { BasePage } from "../pages/BasePage";
 import { ConsultationFormPage } from "../pages/ConsultationFormPage";
 import { ProductDetailsFlow } from "./productDetailsPageFlow";
-import { CONSULTATION_ERROR_MESSAGES, VALID_FORM_DATA } from "../utils/data/consultationFormData";
+import {
+  CONSULTATION_ERROR_MESSAGES,
+  VALID_FORM_DATA,
+} from "../utils/data/consultationFormData";
+import { PAGE_TITLES } from "../utils/data/metaData";
 
 export class ConsultationFormFlow extends BasePage {
   constructor(page, actions) {
@@ -13,11 +17,10 @@ export class ConsultationFormFlow extends BasePage {
   }
 
   // ============================================================================
-  // Navigation - Reuse existing flow
+  // Navigation — reuse existing product details flow
   // ============================================================================
 
   async NavigateToConsultationForm() {
-    // Use existing flow to navigate to product details and click Request Consultation
     await this.productDetailsFlow.VerifyRequestConsultationButton();
     await this.consultationFormPage.verifyOnConsultationPage();
   }
@@ -30,17 +33,6 @@ export class ConsultationFormFlow extends BasePage {
     await this.NavigateToConsultationForm();
     console.log("✓ Navigation to consultation form verified");
   }
-
-//   async VerifyNavigateBackViaCancelButton() {
-//     await this.NavigateToConsultationForm();
-//     await this.consultationFormPage.clickCancelButton();
-//     // Should be back on product details page
-//     const url = this.page.url();
-//     if (!url.includes("/product/")) {
-//       throw new Error("Did not navigate back to product page");
-//     }
-//     console.log("✓ Cancel button navigation verified");
-//   }
 
   async VerifyNavigateBackViaBreadcrumb() {
     await this.NavigateToConsultationForm();
@@ -55,7 +47,7 @@ export class ConsultationFormFlow extends BasePage {
   async VerifyNavigateHomeViaBreadcrumb() {
     await this.NavigateToConsultationForm();
     await this.consultationFormPage.clickBreadcrumbHome();
-    await this.verifyPageTitle("Imtra | Boating, Transportation, Energy & Marine Products");
+    await this.verifyPageTitle(PAGE_TITLES.HOME);
     console.log("✓ Breadcrumb navigation to home verified");
   }
 
@@ -84,16 +76,11 @@ export class ConsultationFormFlow extends BasePage {
 
   async VerifyRequiredFieldValidation(fieldName, validValue, errorMessage) {
     await this.NavigateToConsultationForm();
-    
-    // Submit empty - verify error
     await this.consultationFormPage.clickSubmitButton();
     await this.consultationFormPage.verifyErrorMessage(errorMessage);
-    
-    // Fill field - verify error disappears
     await this.consultationFormPage.fillField(fieldName, validValue);
     await this.consultationFormPage.clickSubmitButton();
     await this.consultationFormPage.verifyNoErrorMessage(errorMessage);
-    
     console.log(`✓ ${fieldName} required field validation working`);
   }
 
@@ -101,12 +88,9 @@ export class ConsultationFormFlow extends BasePage {
     await this.NavigateToConsultationForm();
     await this.consultationFormPage.clickSubmitButton();
     await this.consultationFormPage.verifyErrorMessage(errorMessage);
-    
-    // Select option
     await this.consultationFormPage.selectContactMethod("EMAIL");
     await this.consultationFormPage.clickSubmitButton();
     await this.consultationFormPage.verifyNoErrorMessage(errorMessage);
-    
     console.log("✓ Contact Method dropdown validation working");
   }
 
@@ -141,16 +125,13 @@ export class ConsultationFormFlow extends BasePage {
   }
 
   // ============================================================================
-  // Successful Submission Tests (without actually submitting due to reCAPTCHA)
+  // Full Form Fill (without submitting due to reCAPTCHA)
   // ============================================================================
 
   async VerifyFormCanBeFilled() {
     await this.NavigateToConsultationForm();
     await this.consultationFormPage.fillAllRequiredFields(VALID_FORM_DATA);
-    
-    // Also fill optional fields
     await this.consultationFormPage.fillMessage(VALID_FORM_DATA.message);
-    
     console.log("✓ Form can be filled with all valid data");
   }
 }

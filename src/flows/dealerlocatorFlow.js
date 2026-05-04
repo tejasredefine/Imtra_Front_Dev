@@ -57,7 +57,7 @@ export class DealerLocatorFlow extends BasePage {
   async VerifyLocationSearch(location) {
     await this.NavigateToDealerLocator();
     await this.dealerLocatorPage.enterLocation(location);
-    // return await this.dealerLocatorPage.verifyResultState();
+    return await this.dealerLocatorPage.verifyResultState();
   }
 
   async VerifyDealerSearch(searchText) {
@@ -81,13 +81,8 @@ export class DealerLocatorFlow extends BasePage {
 
   async VerifyDealerLocatorComplete() {
     await this.NavigateToDealerLocator();
-
-    // Test all brands
     const brandResults = await this.dealerLocatorPage.testEachCheckbox(DEALER_LOCATOR_BRANDS);
-
-    // Test all categories
     const categoryResults = await this.dealerLocatorPage.testEachCheckbox(DEALER_LOCATOR_CATEGORIES);
-
     return { brandResults, categoryResults };
   }
 }

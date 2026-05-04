@@ -21,56 +21,40 @@ export class QuoteFlow extends BasePage {
   }
 
   async NavigateToCartPageFromNavCartIcon(email, password, expectedTitle) {
-    await this.cartFlow.NavigateToCartPageFromNavCartIcon(
-      email,
-      password,
-      expectedTitle,
-    );
+    await this.cartFlow.NavigateToCartPageFromNavCartIcon(email, password, expectedTitle);
   }
 
-  async NavigateToCartPageFromProductDeatailsPage() {
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
+  async NavigateToCartPageFromProductDetailsPage() {
+    await this.cartFlow.NavigateToCartPageFromProductDetailsPage();
   }
 
-  async AddaQuoteWhithoutLogin() {
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
+  async AddaQuoteWithoutLogin() {
+    await this.cartFlow.NavigateToCartPageFromProductDetailsPage();
     await this.ClickOnButtonByTagAndText("button", "ADD TO QUOTE");
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.verifyPageTitle(PAGE_TITLES.SIGN_IN);
   }
 
-  async ClickOnQuoteWithoutlogin() {
+  async ClickOnQuoteWithoutLogin() {
     await this.homepage.clickOnTheQuote();
     await this.verifyPageTitle(PAGE_TITLES.SIGN_IN);
   }
 
-  async ClickOnQuoteAfterlogin(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+  async ClickOnQuoteAfterLogin(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.homepage.clickOnTheQuote();
     await this.verifyPageTitle("IMTRA - Quotes");
   }
 
-  async AddtoQuote(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
+  async AddToQuote(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.cartFlow.NavigateToCartPageFromProductDetailsPage();
     await this.ClickOnButtonByTagAndText("button", "ADD TO QUOTE");
     await this.quotePage.AddaQuote();
   }
 
   async ConvertQuoteToCart(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.homepage.clickOnTheQuote();
     await this.verifyPageTitle("IMTRA - Quotes");
     await this.quotePage.ConvertQuoteToCart();
@@ -81,26 +65,14 @@ export class QuoteFlow extends BasePage {
     await this.quotePage.ClickOnDeleteAndVerify();
   }
 
-  async CartItemAutoConvertToQuoteUponAddingTheQuotetoCart(
-    email,
-    password,
-    expectedTitle,
-  ) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await addSleep(3);
+  async CartItemAutoConvertToQuoteUponAddingTheQuoteToCart(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.cartFlow.NavigateToCartPageFromProductDetailsPage();
+    await this.actions.addSleep(3);
     await this.quotePage.GetCartItemAndConverNewQuoteToCartAndSeeTheCartItemConvertedToQuote();
   }
 
-  async TrytoDecreaseItemQuantityConvertedFromQuotetoCart(
-    email,
-    password,
-    expectedTitle,
-  ) {
+  async TryToDecreaseItemQuantityConvertedFromQuoteToCart(email, password, expectedTitle) {
     await this.ConvertQuoteToCart(email, password, expectedTitle);
     await this.quotePage.clickOnMinusIconInCartItems();
   }
@@ -108,55 +80,43 @@ export class QuoteFlow extends BasePage {
   async AddNewProductToCartConvertedFromQuoteAndTryToDecreaseItsQuantityAndRemoveIt(
     email,
     password,
-    expectedTitle,
+    expectedTitle
   ) {
     await this.ConvertQuoteToCart(email, password, expectedTitle);
     await this.homepage.hoverOvernavlinkrandomly();
     await this.homepage.clickOnTheOneSublinkInSubNavDropdown();
     await this.homepage.verifyPageRedirectionToProductListingPage();
     await this.productListingPage.clickOnRandomProductCard();
-    const productName =
-      await this.productListingPage.verifySelectedProductDetailsPage();
+    const productName = await this.productListingPage.verifySelectedProductDetailsPage();
     await this.ClickOnButtonByTagAndText("span", "ADD TO CART");
-    await addSleep(3);
+    await this.actions.addSleep(3);
     await this.verifyPageTitle("Cart - IMTRA");
     await this.quotePage.ClickOnTheDecreasebuttonofNewlyAddedProductAndClickOnDeleteButtonOfNewlyAddedProduct(
-      productName,
+      productName
     );
   }
 
   async ClearAllButtonTestConvertedFromTheCart(email, password, expectedTitle) {
     await this.ConvertQuoteToCart(email, password, expectedTitle);
     await this.ClickOnButtonByTagAndText("button", "CLEAR ALL");
-    await this.validateModal(
-      "Confirm",
-      "Are you sure you want to clear all items from your cart?",
-    );
+    await this.validateModal("Confirm", "Are you sure you want to clear all items from your cart?");
     await this.ClickOnButtonByTagAndText("button", "Yes");
-    await addSleep(1);
+    await this.actions.addSleep(1);
     await this.validateModal(
       "Error",
-      "This cart is linked to a quote and cannot be deleted. Please contact sales to modify the quote.",
+      "This cart is linked to a quote and cannot be deleted. Please contact sales to modify the quote."
     );
   }
 
   async StatusDropDownTest(email, password, expectedTitle, status) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.homepage.clickOnTheQuote();
     await this.verifyPageTitle("IMTRA - Quotes");
-    await this.quotePage.selectOptionFromDorpdownandVerifyStatus(status);
+    await this.quotePage.selectOptionFromDropdownAndVerifyStatus(status);
   }
 
   async NoteModalValidationMessageTest(email, password, expectedTitle) {
-    await this.NavigateToCartPageFromNavCartIcon(
-      email,
-      password,
-      expectedTitle,
-    );
+    await this.NavigateToCartPageFromNavCartIcon(email, password, expectedTitle);
     await this.quotePage.clickOnAddToQuoteButtonAndValidateValidationMessages();
   }
 }

@@ -6,7 +6,6 @@ import { LoginFlow } from "./loginFlow";
 import { PAGE_TITLES } from "../utils/data/metaData";
 import { CartFlow } from "./cartFlow";
 import { CheckoutComp } from "../components/checkoutComp";
-import { creditCardFieldErrorMessages } from "../utils/data/checkoutData";
 
 export class CheckoutFlow extends BasePage {
   constructor(page, actions) {
@@ -21,142 +20,82 @@ export class CheckoutFlow extends BasePage {
     this.checkoutComp = new CheckoutComp(page, actions);
   }
 
+  // ---- Navigate to checkout — shared helper ----
+  async _goToCheckout() {
+    await this.cartFlow.NavigateToCartPageFromProductDetailsPage();
+    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
+    await this.actions.addSleep(2);
+    await this.verifyPageTitle("IMTRA - Checkout");
+  }
+
   /**
-   * Logged-in user: home → listing add to cart → cart → CHECKOUT NOW (skips guest email).
+   * Logged-in user: home → listing → add to cart → checkout (skips guest email).
    */
   async checkoutLoggedInUserDirect(ifErrorMessages = "") {
     await this.loginFlow.LoginAndVerifyRedirection(
       process.env.EMAIL,
       process.env.PASSWORD,
-      PAGE_TITLES.HOME,
+      PAGE_TITLES.HOME
     );
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
-    // common methods of shipping and billing address
+    await this._goToCheckout();
     await this.checkoutPage.checkoutPageCommonMethods(ifErrorMessages);
   }
 
   async checkoutWithoutLoginAndLoginWithValidCredentials(
     emailErrorMessages = "",
     passwordErrorMessages = "",
-    ifErrorMessages = "",
+    ifErrorMessages = ""
   ) {
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
-    await this.checkoutPage.fillEmailWithCorrectDetailsOrErrorMessages(
-      emailErrorMessages,
-    );
-    await this.checkoutPage.fillPasswordWithCorrectDetailsOrErrorMessages(
-      passwordErrorMessages,
-    );
-
-    // common methods of shipping and billing address
+    await this._goToCheckout();
+    await this.checkoutPage.fillEmailWithCorrectDetailsOrErrorMessages(emailErrorMessages);
+    await this.checkoutPage.fillPasswordWithCorrectDetailsOrErrorMessages(passwordErrorMessages);
     await this.checkoutPage.checkoutPageCommonMethods(ifErrorMessages);
   }
 
-  async checkoutWithoutLoginAndVerifyEmailErrorMessages(
-    emailErrorMessages = "",
-  ) {
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
-    await this.checkoutPage.fillEmailWithCorrectDetailsOrErrorMessages(
-      emailErrorMessages,
-    );
+  async checkoutWithoutLoginAndVerifyEmailErrorMessages(emailErrorMessages = "") {
+    await this._goToCheckout();
+    await this.checkoutPage.fillEmailWithCorrectDetailsOrErrorMessages(emailErrorMessages);
   }
 
-  async checkoutWithoutLoginAndVerifyPasswordErrorMessages(
-    passwordErrorMessages = "",
-  ) {
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
+  async checkoutWithoutLoginAndVerifyPasswordErrorMessages(passwordErrorMessages = "") {
+    await this._goToCheckout();
     await this.checkoutPage.fillEmailWithCorrectDetailsOrErrorMessages("");
-    await this.checkoutPage.fillPasswordWithCorrectDetailsOrErrorMessages(
-      passwordErrorMessages,
-    );
+    await this.checkoutPage.fillPasswordWithCorrectDetailsOrErrorMessages(passwordErrorMessages);
   }
 
   async checkoutAsGuest(addressErrorMessages = "") {
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
+    await this._goToCheckout();
     await this.checkoutPage.fillEmailForGuestCheckout();
-
-    // click on checkout as guest button and verify
     await this.checkoutPage.clickOnCheckoutAsGuestButtonAndVerify();
 
     if (addressErrorMessages) {
-      await this.checkoutComp.clickContinueInSection(
-        "Shipping And Billing Address",
-      );
+      await this.checkoutComp.clickContinueInSection("Shipping And Billing Address");
       await this.checkoutPage.verifyErrorMessages(addressErrorMessages);
       return;
-    } else {
-      // fill shipping and billing address
-      await this.checkoutPage.fillShippingAndBillingAddress();
-
-      // continue to Shipping Method
-      await this.checkoutComp.clickContinueInSection(
-        "Shipping And Billing Address",
-      );
-      await this.checkoutComp.clickContinueInSection("Shipping Method");
-      // await addSleep(2);
-
-      // // Verify Validation Errors
-      // await this.checkoutComp.clickContinueInSection("Payment Method");
-      // await addSleep(2);
-      // await this.checkoutPage.verifyErrorMessages(ifErrorMessages);
     }
+
+    await this.checkoutPage.fillShippingAndBillingAddress();
+    await this.checkoutComp.clickContinueInSection("Shipping And Billing Address");
+    await this.checkoutComp.clickContinueInSection("Shipping Method");
   }
 
   async createNewAccountAtCheckoutPage(newAccountErrorMessage = "", data = {}) {
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
+    await this._goToCheckout();
     await this.checkoutPage.createNewAccountAndVerify();
 
-    // if error messages are present then verify and return
     if (newAccountErrorMessage !== "") {
       await this.page.getByText("CONTINUE").click();
       await this.checkoutPage.verifyErrorMessages(newAccountErrorMessage);
       return;
-    } else {
-      // click on create new account button
-      await this.checkoutPage.clickOnCreateNewAccountButtonAndFillForm(data);
-
-      // continue to Shipping Method
-      await this.page.getByText("CONTINUE").click();
-
-      // fill shipping and billing address
-      await this.checkoutPage.fillShippingAndBillingAddress();
-
-      // continue to Shipping Method
-      await this.checkoutComp.clickContinueInSection(
-        "Shipping And Billing Address",
-      );
-      await this.checkoutComp.clickContinueInSection("Shipping Method");
-      await addSleep(2);
-
-      // Verify Validation Errors
-      await this.checkoutComp.clickContinueInSection("Payment Method");
-      // await addSleep(2);
-      // await this.checkoutPage.verifyErrorMessages(creditCardFieldErrorMessages);
     }
+
+    await this.checkoutPage.clickOnCreateNewAccountButtonAndFillForm(data);
+    await this.page.getByText("CONTINUE").click();
+    await this.checkoutPage.fillShippingAndBillingAddress();
+    await this.checkoutComp.clickContinueInSection("Shipping And Billing Address");
+    await this.checkoutComp.clickContinueInSection("Shipping Method");
+    await this.actions.addSleep(2);
+    await this.checkoutComp.clickContinueInSection("Payment Method");
   }
 
   // ================ Placed Order With PO Number ================
@@ -164,13 +103,9 @@ export class CheckoutFlow extends BasePage {
     await this.loginFlow.LoginAndVerifyRedirection(
       process.env.EMAIL,
       process.env.PASSWORD,
-      PAGE_TITLES.HOME,
+      PAGE_TITLES.HOME
     );
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
+    await this._goToCheckout();
     await this.checkoutPage.placeOrderWithPONumber();
   }
 
@@ -179,51 +114,35 @@ export class CheckoutFlow extends BasePage {
     await this.loginFlow.LoginAndVerifyRedirection(
       process.env.EMAIL,
       process.env.PASSWORD,
-      PAGE_TITLES.HOME,
+      PAGE_TITLES.HOME
     );
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
+    await this._goToCheckout();
     await this.checkoutPage.placeOrderWithCreditCard();
   }
 
-  // ================ Edit or Add Shipping or Billing Address ================
-  async editOrAddShippingOrBillingAddress(
-    isBillingAddress = false,
-    addressData,
-    addNewAddress = false,
-  ) {
+  // ================ Edit or Add Shipping/Billing Address ================
+  async editOrAddShippingOrBillingAddress(isBillingAddress = false, addressData, addNewAddress = false) {
     await this.loginFlow.LoginAndVerifyRedirection(
       process.env.EMAIL,
       process.env.PASSWORD,
-      PAGE_TITLES.HOME,
+      PAGE_TITLES.HOME
     );
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
+    await this._goToCheckout();
     await this.checkoutPage.editOrAddShippingOrBillingAddress(
       isBillingAddress,
       addressData,
-      addNewAddress,
+      addNewAddress
     );
   }
 
-  // ================ Return to Cart Page From Checkout Page With same Added Items count================
+  // ================ Return to Cart Page From Checkout With Same Items ================
   async returnToCartPageFromCheckoutPageWithEarlierAddedItems() {
     await this.loginFlow.LoginAndVerifyRedirection(
       process.env.EMAIL,
       process.env.PASSWORD,
-      PAGE_TITLES.HOME,
+      PAGE_TITLES.HOME
     );
-    await this.cartFlow.NavigateToCartPageFromProductDeatailsPage();
-    await this.ClickOnButtonByTagAndText("a", "Checkout Now");
-    await addSleep(2);
-    await this.verifyPageTitle("IMTRA - Checkout");
-
+    await this._goToCheckout();
     await this.checkoutPage.returnToCartPageFromCheckoutPageWithEarlierAddedItems();
   }
 }
