@@ -13,69 +13,67 @@ export class ShippingCarriersFlow extends BasePage {
     this.shippingCarriersPage = new ShippingCarriersPage(page, actions);
   }
 
-  // ***************** Small Utility Funtion ******************
+  // ---- Shared: navigate to Shipping Carriers tab after login ----
   async navigateToShippingCarriersTab(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
-    await addSleep(2);
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
+    await this.actions.addSleep(2);
     await this.homepage.hoverOverTheAccountIconClickOnWhislist();
     await this.ClickOnButtonByTagAndTitle("a", "Shipping Carriers");
     console.log("Clicked on the Shipping Carriers Tab");
   }
 
-  // --- Test Case For the Adding A Shipping Carrier ----
+  // ---- Add a Shipping Carrier ----
   async AddaShippingCarrier(email, password, expectedTitle) {
     await this.navigateToShippingCarriersTab(email, password, expectedTitle);
     await this.shippingCarriersPage.AddaShippingCarrier();
   }
 
-  // ---- test Case For the trying o delete a default Shipping Carrier -----
+  // ---- Try to delete the default Shipping Carrier ----
   async DeleteDefaultShippingCarrier(email, password, expectedTitle) {
     await this.navigateToShippingCarriersTab(email, password, expectedTitle);
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.shippingCarriersPage.DeleteDefaultShippingCarrier();
   }
 
+  // ---- Delete a non-default Shipping Carrier ----
   async DeleteNonDefaultShippingCarrier(email, password, expectedTitle) {
     await this.navigateToShippingCarriersTab(email, password, expectedTitle);
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.shippingCarriersPage.DeleteNonDefaultShippingCarrier();
   }
 
-  async AddDefaultCarrierInactivalyShippingCarrier(
-    email,
-    password,
-    expectedTitle,
-  ) {
+  // ---- Add a default carrier that is inactive ----
+  async AddDefaultCarrierInactivelyShippingCarrier(email, password, expectedTitle) {
     await this.navigateToShippingCarriersTab(email, password, expectedTitle);
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.shippingCarriersPage.AddDefaultInactiveShippingCarrier();
   }
 
-  async EditDefaultCarrierStatusToInacive(email, password, expectedTitle) {
+  // ---- Edit default carrier status to inactive ----
+  async EditDefaultCarrierStatusToInactive(email, password, expectedTitle) {
     await this.navigateToShippingCarriersTab(email, password, expectedTitle);
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.shippingCarriersPage.EditDefaultCarrierStatusToInacive();
   }
 
-  async EditNonDefaultCarrierADefaultCarrier(email, password, expectedTitle) {
+  // ---- Set a non-default carrier as the default ----
+  async EditNonDefaultCarrierAsDefaultCarrier(email, password, expectedTitle) {
     await this.navigateToShippingCarriersTab(email, password, expectedTitle);
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.shippingCarriersPage.EditNonDefaultCarrierADefaultCarrier();
   }
 
-  async TestValidationsofShippingCarrierModal(email, password, expectedTitle) {
+  // ---- Test modal validations ----
+  async TestValidationsOfShippingCarrierModal(email, password, expectedTitle) {
     await this.navigateToShippingCarriersTab(email, password, expectedTitle);
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.shippingCarriersPage.TestShippingCarrierModalValidations();
   }
 
+  // ---- Add carrier with duplicate name ----
   async AddNewCarrierWithSameName(email, password, expectedTitle) {
     await this.navigateToShippingCarriersTab(email, password, expectedTitle);
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.shippingCarriersPage.AddNewCarrierWithSameName();
   }
 }

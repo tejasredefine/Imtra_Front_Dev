@@ -1,5 +1,6 @@
 import { HomePage } from "../pages/homePage";
 import { BasePage } from "../pages/BasePage";
+import { PAGE_TITLES } from "../utils/data/metaData";
 
 export class HomepageFlow extends BasePage {
   constructor(page, actions) {
@@ -9,13 +10,10 @@ export class HomepageFlow extends BasePage {
     this.homepage = new HomePage(page, actions);
   }
 
-  // ---------- Login with valid credenials --------------
-  async VerifyTheHeroSecion() {
-    await this.homepage.clickOnTheNavDosAndVerifyHeroSecioncontent();
+  async VerifyTheHeroSection() {
+    await this.homepage.clickOnTheNavDosAndVerifyHeroSectioncontent();
     await this.ClickOnButtonByTagAndText("span", "Explore products");
-    await this.verifyPageTitle(
-      "Recreational Marine | Markets We Serve | Imtra",
-    );
+    await this.verifyPageTitle("Recreational Marine | Markets We Serve | Imtra");
     await this.verifyBreadcrumb("Recreational Marine Market");
     await this.verifyPageHeader("div", "Recreational Marine Market");
   }
@@ -39,92 +37,73 @@ export class HomepageFlow extends BasePage {
 
   async VerifyMarketsWeServeSection() {
     await this.ClickOnButtonByTagAndText("a", "RECREATIONAL MARINE");
-    await this.verifyPageTitle(
-      "Recreational Marine | Markets We Serve | Imtra",
-    );
+    await this.verifyPageTitle("Recreational Marine | Markets We Serve | Imtra");
     await this.actions.goBack();
 
     await this.ClickOnButtonByTagAndText("a", "COMMERCIAL MARINE");
-    await this.verifyPageTitle(
-      "Commercial Marine Solutions | Markets We Serve | Imtra",
-    );
+    await this.verifyPageTitle("Commercial Marine Solutions | Markets We Serve | Imtra");
     await this.actions.goBack();
 
     await this.ClickOnButtonByTagAndText("a", "VANS / RV");
-    await this.verifyPageTitle(
-      "Van Conversion Equipment | Land-Based Products | Imtra",
-    );
+    await this.verifyPageTitle("Van Conversion Equipment | Land-Based Products | Imtra");
     await this.actions.goBack();
 
     await this.ClickOnButtonByTagAndText("a", "ENERGY");
-    await this.verifyPageTitle(
-      "Oil Tanker & Gas Carrier Boat Equipment | Energy Industry ",
-    );
+    await this.verifyPageTitle("Oil Tanker & Gas Carrier Boat Equipment | Energy Industry ");
   }
 
-  async VerifyAboutImtraSecion() {
+  async VerifyAboutImtraSection() {
     await this.ClickOnButtonByTagAndText("a", "About IMTRA");
     await this.verifyPageTitle("About Imtra");
   }
 
-  async VerifySeaViewBannerSecion() {
+  async VerifySeaViewBannerSection() {
     await this.ClickOnButtonByTagAndTitle("a", "Seaview Blinds ");
     await this.verifyPageTitle("Seaview Blinds");
   }
 
-  async VerifyImtraTradeSecion() {
+  async VerifyImtraTradeSection() {
     await this.ClickOnButtonByTagAndTitle("a", "Trade Shows & Events");
     await this.verifyPageTitle("Imtra's Trade Shows & Events");
   }
 
-  async VerifyImtraClearanceItemsSecion() {
+  async VerifyImtraClearanceItemsSection() {
     await this.ClickOnButtonByTagAndTitle("a", "Imtra Clearance Items");
     await this.verifyPageTitle("Clearance Items");
   }
 
-  async VerifyLocateADealerSecion() {
+  async VerifyLocateADealerSection() {
     await this.ClickOnButtonByTagAndTitle("a", "Locate a Dealer");
     await this.verifyPageTitle("Locate a Dealer");
   }
 
-  async VerifyVimarBannerSecion() {
+  async VerifyVimarBannerSection() {
     await this.ClickOnButtonByTagAndTitle("a", "Vimar");
     await this.verifyPageTitle("Vimar");
   }
 
-  async VerifyBrandParnerSlider() {
+  async VerifyBrandPartnerSlider() {
     await this.homepage.clickOnTheSliderLogosOneByOneAndVerifyThePageRedirection();
   }
 
-  async VerifyVideoLibrarySecion() {
+  async VerifyVideoLibrarySection() {
     await this.ClickOnButtonByTagAndText("a", "Company Overview");
-    await this.verifyPageTitle(
-      "Video Library | Demos, Installations, & More | Imtra",
-    );
+    await this.verifyPageTitle("Video Library | Demos, Installations, & More | Imtra");
     await this.actions.goBack();
 
     await this.ClickOnButtonByTagAndText("a", "Commercial Overview");
-    await this.verifyPageTitle(
-      "Video Library | Demos, Installations, & More | Imtra",
-    );
+    await this.verifyPageTitle("Video Library | Demos, Installations, & More | Imtra");
     await this.actions.goBack();
 
     await this.ClickOnButtonByTagAndText("a", "Recreational Overview");
-    await this.verifyPageTitle(
-      "Video Library | Demos, Installations, & More | Imtra",
-    );
+    await this.verifyPageTitle("Video Library | Demos, Installations, & More | Imtra");
     await this.actions.goBack();
 
-    await this.ClickOnButtonByTagAndText(
-      "a",
-      "Introducing Zipwake: Comfort & Performance",
-    );
-    await this.verifyPageTitle(
-      "Video Library | Demos, Installations, & More | Imtra",
-    );
+    await this.ClickOnButtonByTagAndText("a", "Introducing Zipwake: Comfort & Performance");
+    await this.verifyPageTitle("Video Library | Demos, Installations, & More | Imtra");
   }
 
-  async VerifyLaestNewsAndResourceSection() {
+  async VerifyLatestNewsAndResourceSection() {
     console.log("Test Starting");
     await this.homepage.VerifyLatestNewsAndResourseSectionTesting();
   }

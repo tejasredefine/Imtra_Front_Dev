@@ -1,11 +1,12 @@
 // @ts-check
 import { defineConfig } from "@playwright/test";
 import dotenv from "dotenv";
+import { config } from "process";
 
 dotenv.config();
 
 export default defineConfig({
-  testDir: "./src/tests",
+  //testDir: "./src/tests",
   fullyParallel: false,
   forbidOnly: !!process.env.CI,
   retries: Number(process.env.RETRY_ATTEMPTS) ?? 1,

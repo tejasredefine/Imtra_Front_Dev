@@ -26,14 +26,12 @@ export class ProductDetailsFlow extends BasePage {
 
   async NavigateToProductDetailsPageFromHomepageFeaturedProductSection() {
     await this.verifyPageTitle(PAGE_TITLES.HOME);
-    const featuredProductSecion = await findElementByXpath(
-      "//a[@title='Vimar']",
-    );
-    await this.actions.scrollIntoView(featuredProductSecion);
-    await addSleep(1);
+    const featuredProductSection = await findElementByXpath("//a[@title='Vimar']");
+    await this.actions.scrollIntoView(featuredProductSection);
+    await this.actions.addSleep(1);
     const selectedProductName =
       await this.homepage.clickOnAnyProductRandomalyInFeaturedProductSlider();
-    await addSleep(1);
+    await this.actions.addSleep(1);
     await this.verifyPageHeader("h1", selectedProductName);
   }
 
@@ -57,27 +55,25 @@ export class ProductDetailsFlow extends BasePage {
   async NavigateToProductDetailsPageFromCartPage() {
     await this.listingpageFlow.VerifyAddToCartFunctionality();
     const button = await findElementByXpath(
-      "//a[@class='text-primary line-clamp-2 text-base font-semibold']",
+      "//a[@class='text-primary line-clamp-2 text-base font-semibold']"
     );
     const productName = await this.actions.getText(button);
     console.log("Selected Product Name From Cart:", productName);
     await click(button);
-    await addSleep(1);
+    await this.actions.addSleep(1);
     await this.verifyPageHeader("h1", productName);
   }
 
-  async WhislistFuntionalityTesingWithouLogin() {
+  // ======== Wishlist Tests ========
+
+  async WishlistFunctionalityTestingWithoutLogin() {
     await this.NavigateToProductDetailsPageFromNavbar();
     await this.productDetailsPage.clickOnWhislistIcon();
     await this.validateModal("Info", "Please login to add to wishlist");
   }
 
-  async WhislistFuntionalityTesingWithLogin(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+  async WishlistFunctionalityTestingWithLogin(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.NavigateToProductDetailsPageFromNavbar();
     const productTitle = await findElementByXpath("//h1");
     const productName = await this.actions.getText(productTitle);
@@ -88,38 +84,26 @@ export class ProductDetailsFlow extends BasePage {
     await this.productDetailsPage.removeFromWhislist();
   }
 
-  async WhislistFuntionalityTesingWithCarPage(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+  async WishlistFunctionalityTestingWithCartPage(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.NavigateToProductDetailsPageFromNavbar();
     const productTitle = await findElementByXpath("//h1");
     const productName = await this.actions.getText(productTitle);
-
     await this.productDetailsPage.clickOnWhislistIcon();
     await this.productDetailsPage.clickOnAddToCart();
-
     await this.cartPage.verifyProductInCartIsMarkedAsWishlist(productName);
   }
 
-  async AddYourCustomerItemNumberTestingWhithoutLogin() {
+  // ======== Customer Item Number Tests ========
+
+  async AddYourCustomerItemNumberTestingWithoutLogin() {
     await this.NavigateToProductDetailsPageFromNavbar();
     await this.productDetailsPage.clickOnTheAddYourcustomerItemNumberLink();
     await this.verifyPageTitle("Sign In - IMTRA");
   }
 
-  async AddYourCustomerItemNumberTestingWithBlankNumber(
-    email,
-    password,
-    expectedTitle,
-  ) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+  async AddYourCustomerItemNumberTestingWithBlankNumber(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.NavigateToProductDetailsPageFromNavbar();
     await this.productDetailsPage.clickOnTheAddYourcustomerItemNumberLink();
     await this.productDetailsPage.verifyAddCustomerItemNumberPopup();
@@ -127,94 +111,58 @@ export class ProductDetailsFlow extends BasePage {
     await this.productDetailsPage.EditCustomerNumberLinkWillNotVisible();
   }
 
-  async AddYourCustomerItemNumberTestingWithValidNumber(
-    email,
-    password,
-    expectedTitle,
-  ) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+  async AddYourCustomerItemNumberTestingWithValidNumber(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.NavigateToProductDetailsPageFromNavbar();
     await this.productDetailsPage.clickOnTheAddYourcustomerItemNumberLink();
     await this.productDetailsPage.verifyAddCustomerItemNumberPopup();
     await this.productDetailsPage.enterItemNumberAndSave("205-CUPPs");
-    await addSleep(1);
+    await this.actions.addSleep(1);
     await this.productDetailsPage.verifyItemNumberAddition("205-CUPPs");
   }
 
-  async AddYourCustomerItemNumberTestingWithInvalidNumber(
-    email,
-    password,
-    expectedTitle,
-  ) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+  async AddYourCustomerItemNumberTestingWithInvalidNumber(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.NavigateToProductDetailsPageFromNavbar();
     await this.productDetailsPage.clickOnTheAddYourcustomerItemNumberLink();
     await this.productDetailsPage.verifyAddCustomerItemNumberPopup();
     await this.productDetailsPage.enterItemNumberAndSave(
-      "545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrbkdgholsduiv",
+      "545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrb545-dfvbrbkdgholsduiv"
     );
     await this.productDetailsPage.verifyCustomerItemNumberErrorMessage(
-      "Customer item number exceeds the maximum limit of 100 characters",
+      "Customer item number exceeds the maximum limit of 100 characters"
     );
   }
 
-  async EditYourCustomerItemNumberTestingWithValidNumber(
-    email,
-    password,
-    expectedTitle,
-  ) {
-    await this.AddYourCustomerItemNumberTestingWithValidNumber(
-      email,
-      password,
-      expectedTitle,
-    );
+  async EditYourCustomerItemNumberTestingWithValidNumber(email, password, expectedTitle) {
+    await this.AddYourCustomerItemNumberTestingWithValidNumber(email, password, expectedTitle);
     await this.productDetailsPage.clickOnTheEditYourcustomerItemNumberLink();
     await this.productDetailsPage.verifyAddCustomerItemNumberPopup("205-CUPPs");
     await this.productDetailsPage.enterItemNumberAndSave("POP-UP-2034");
-    await addSleep(1);
+    await this.actions.addSleep(1);
     await this.productDetailsPage.verifyItemNumberAddition("POP-UP-2034");
   }
 
-  async RemoveCustomerItemNumbeTest(email, password, expectedTitle) {
-    await this.AddYourCustomerItemNumberTestingWithValidNumber(
-      email,
-      password,
-      expectedTitle,
-    );
+  async RemoveCustomerItemNumberTest(email, password, expectedTitle) {
+    await this.AddYourCustomerItemNumberTestingWithValidNumber(email, password, expectedTitle);
     await this.productDetailsPage.clickOnTheEditYourcustomerItemNumberLink();
     await this.productDetailsPage.verifyAddCustomerItemNumberPopup("205-CUPPs");
     await this.productDetailsPage.enterItemNumberAndSave(" ");
-    await addSleep(1);
+    await this.actions.addSleep(1);
     await this.productDetailsPage.EditCustomerNumberLinkWillNotVisible();
   }
 
-  async CancelCustomerItemNumbeTest(email, password, expectedTitle) {
-    await this.AddYourCustomerItemNumberTestingWithValidNumber(
-      email,
-      password,
-      expectedTitle,
-    );
+  async CancelCustomerItemNumberTest(email, password, expectedTitle) {
+    await this.AddYourCustomerItemNumberTestingWithValidNumber(email, password, expectedTitle);
     await this.productDetailsPage.clickOnTheEditYourcustomerItemNumberLink();
     await this.productDetailsPage.verifyAddCustomerItemNumberPopup("205-CUPPs");
     await this.productDetailsPage.enterItemNumberAndCancel("Lojkg");
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.productDetailsPage.verifyItemNumberAddition("205-CUPPs");
   }
 
-  async CancelAddCustomerItemNumbeTest(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+  async CancelAddCustomerItemNumberTest(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.NavigateToProductDetailsPageFromNavbar();
     await this.productDetailsPage.clickOnTheAddYourcustomerItemNumberLink();
     await this.productDetailsPage.verifyAddCustomerItemNumberPopup();
@@ -222,20 +170,21 @@ export class ProductDetailsFlow extends BasePage {
     await this.productDetailsPage.EditCustomerNumberLinkWillNotVisible();
   }
 
-  async AddToCartFuntionalityTest() {
+  // ======== Add to Cart Test ========
+
+  async AddToCartFunctionalityTest() {
     await this.NavigateToProductDetailsPageFromNavbar();
-    const cartData =
-      await this.productDetailsPage.addRandomQuantityToCartFromDetailsPage();
-    await addSleep(3);
+    const cartData = await this.productDetailsPage.addRandomQuantityToCartFromDetailsPage();
+    await this.actions.addSleep(3);
     await this.verifyPageTitle("Cart - IMTRA");
-    await addSleep(3);
+    await this.actions.addSleep(3);
     await this.productDetailsPage.verifyCartDetailsOnCartPage(cartData);
   }
 
   async VerifyRequestConsultationButton() {
     await this.NavigateToProductDetailsPageFromNavbar();
     await this.ClickOnButtonByTagAndText("a", "Request Consultation");
-    await addSleep(2);
+    await this.actions.addSleep(2);
     await this.verifyPageTitle("Request Consultation - IMTRA");
   }
 
@@ -244,27 +193,17 @@ export class ProductDetailsFlow extends BasePage {
     await this.productDetailsPage.ImportantWarningSecionTest();
   }
 
+  // ======== Review Tests ========
+
   async PerformWriteAReview(email, password, expectedTitle) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.NavigateToProductDetailsPageFromNavbar();
     await this.productDetailsPage.clickOnWriteAReviewAndVerifyPageRedirection();
     await this.productDetailsPage.AddaReviewDetailsTestCases();
   }
 
-  async ValidaeErrorMessagesOnTheWriteAReviewPage(
-    email,
-    password,
-    expectedTitle,
-  ) {
-    await this.loginFlow.LoginAndVerifyRedirection(
-      email,
-      password,
-      expectedTitle,
-    );
+  async ValidateErrorMessagesOnTheWriteAReviewPage(email, password, expectedTitle) {
+    await this.loginFlow.LoginAndVerifyRedirection(email, password, expectedTitle);
     await this.NavigateToProductDetailsPageFromNavbar();
     await this.productDetailsPage.clickOnWriteAReviewAndVerifyPageRedirection();
     await this.productDetailsPage.ValidateErrorMessageReviewDetailsPage();

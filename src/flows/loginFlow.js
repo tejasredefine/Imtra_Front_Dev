@@ -3,6 +3,7 @@ import { HomePage } from "../pages/homePage";
 import { ProductListingPage } from "../pages/productListingPage";
 import { ProductDetailsPage } from "../pages/productDetailsPage";
 import { BasePage } from "../pages/BasePage";
+
 export class LoginFlow extends BasePage {
   constructor(page, actions) {
     super(page, actions);
@@ -15,6 +16,7 @@ export class LoginFlow extends BasePage {
   }
 
   // ************* UTILITIES ******************************
+
   async login(email, password) {
     await this.verifyPageTitle("Sign In - IMTRA");
     await this.loginPage.enterEmail(email, "LoginEmail");
@@ -29,9 +31,10 @@ export class LoginFlow extends BasePage {
     await this.productListingPage.clickOnRandomProductCard();
     await this.productListingPage.verifySelectedProductDetailsPage();
   }
+
   // ******************************************************
 
-  // ---------- Login with valid credenials --------------
+  // ---------- Login with valid credentials --------------
   async LoginAndVerifyRedirection(email, password, expectedTitle) {
     await this.loginPage.clickOnLoginIcon();
     await this.login(email, password);
@@ -45,27 +48,22 @@ export class LoginFlow extends BasePage {
     await this.verifyPageTitle(expectedTitle);
   }
 
-  // ------- Login From Product Deails Page (Add cusomer Item number) ---------
+  // ------- Login From Product Details Page (Add customer Item number) ---------
   async performLoginFromProductDetailsPage(email, password) {
     await this.navigateToRandomProduct();
     await this.productDetailsPage.clickOnTheAddYourcustomerItemNumberLink();
     await this.login(email, password);
   }
 
-  // ---------- Login From Product Deails Page ( customer Review ) -------------
+  // ---------- Login From Product Details Page (customer Review) -------------
   async performLoginFromProductDetailsPageCustomerReview(email, password) {
     await this.navigateToRandomProduct();
     await this.productDetailsPage.clickOnTheLoginButtonInTheCustomerReviewSection();
     await this.login(email, password);
   }
 
-  // ---------- Login with wrong Email Password -----------------------
-  async performLoginWithWrongEmailPassword(
-    email,
-    password,
-    type,
-    errorMessage,
-  ) {
+  // ---------- Login with wrong Email/Password -----------------------
+  async performLoginWithWrongEmailPassword(email, password, type, errorMessage) {
     await this.loginPage.clickOnLoginIcon();
     await this.login(email, password);
     await this.validateModal(type, errorMessage);
